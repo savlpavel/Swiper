@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+    Copyright 2017 Cameron Gregor (http://camerongregor.com) 
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+   
+    http://www.apache.org/licenses/LICENSE-2.0
+   
+    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License
+ -->
+
+<plugin>
+
+   <extension
+         id="SwiperPostSyncBuilder"
+         name="Swiper Post Sync Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.openntf.swiper.builder.post.SwiperPostSyncBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="SwiperPreSyncBuilder"
+         name="Swiper Pre Sync Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.openntf.swiper.builder.pre.SwiperPreSyncBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="swiperNature"
+         name="Swiper Metadata Filter Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.openntf.swiper.builder.SwiperNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.openntf.swiper.SwiperPostSyncBuilder">
+      </builder>
+      <builder
+            id="org.openntf.swiper.SwiperPreSyncBuilder">
+      </builder>
+   </extension>
+      
+   
+   <extension
+         id="xmlProblem"
+         name="Swiper Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.openntf.swiper.pref.SwiperPreferencePage"
+            id="org.openntf.swiper.swiperPage"
+            name="Swiper">
+      </page>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="org.openntf.swiper.menuPopupNsf"
+               label="Swiper">
+            <command
+                  commandId="org.openntf.swiper.commands.addswiper"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.openntf.swiper.commands.removeswiper"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.openntf.swiper.commands.filterMetadata"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:file?after=additions2">
+         <menu
+               id="org.openntf.swiper.menuFileNsf"
+               label="Swiper">
+            <command
+                  commandId="org.openntf.swiper.commands.addswiper"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.openntf.swiper.commands.removeswiper"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+            <separator
+                  name="org.openntf.swiper.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.openntf.swiper.commands.startLogging"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.openntf.swiper.commands.stopLogging"
+                  mode="FORCE_TEXT"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.openntf.swiper.commands.addswiper"
+            name="Add Swiper">
+      </command>
+      <command
+            id="org.openntf.swiper.commands.removeswiper"
+            name="Remove Swiper">
+      </command>
+      <command
+            id="org.openntf.swiper.commands.filterMetadata"
+            name="Filter Selected">
+      </command>
+      <command
+            id="org.openntf.swiper.commands.stopLogging"
+            name="Stop Logging">
+      </command>
+      <command
+            id="org.openntf.swiper.commands.startLogging"
+            name="Start Logging">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.openntf.swiper.handlers.AddSwiperHandler"
+            commandId="org.openntf.swiper.commands.addswiper">
+         <enabledWhen>
+         
+          <with variable="selection">
+      <iterate ifEmpty="true" operator="and">
+         <adapt type="org.eclipse.core.resources.IResource">
+            <not>
+               <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="org.openntf.swiper.swiperNature" />
+            </not>
+         </adapt>
+      </iterate>
+   </with>
+         
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.openntf.swiper.handlers.RemoveSwiperHandler"
+            commandId="org.openntf.swiper.commands.removeswiper">
+                     <enabledWhen>
+                     
+                     <with variable="selection">
+      <iterate ifEmpty="false" operator="or">
+         <adapt type="org.eclipse.core.resources.IResource">
+            <test
+                  property="org.eclipse.core.resources.projectNature"
+                  value="org.openntf.swiper.swiperNature" />
+         </adapt>
+      </iterate>
+   </with>
+                     
+         </enabledWhen>
+            
+      </handler>
+      <handler
+            class="org.openntf.swiper.action.FilterMetadataAction"
+            commandId="org.openntf.swiper.commands.filterMetadata">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="or">
+                  <adapt
+                        type="org.eclipse.core.resources.IResource">
+                     <test
+                           property="org.eclipse.core.resources.projectNature"
+                           value="org.openntf.swiper.swiperNature">
+                     </test>
+                  </adapt>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.openntf.swiper.handlers.StartLoggingHandler"
+            commandId="org.openntf.swiper.commands.startLogging">
+      </handler>
+      <handler
+            class="org.openntf.swiper.handlers.StopLoggingHandler"
+            commandId="org.openntf.swiper.commands.stopLogging">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.openntf.swiper.pref.SwiperPreferencePage"
+            id="org.openntf.swiper.swiperPropertyPage"
+            name="Swiper">
+         <enabledWhen>
+            <and>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+                  <test
+                        property="org.eclipse.core.resources.projectNature"
+                        value="org.openntf.swiper.swiperNature">
+                  </test>
+               </adapt>
+            </and>
+         </enabledWhen>
+      </page>
+   </extension>
+   <extension
+         point="com.ibm.designer.domino.team.synclistener">
+      <syncListener
+            class="org.openntf.swiper.builder.SwiperSyncListener">
+      </syncListener>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.openntf.swiper.actionSet"
+            label="Swiper"
+            visible="true">
+         <menu
+               id="org.openntf.swiper.menu"
+               label="Swiper">
+            <separator
+                  name="org.openntf.swiper.separator">
+            </separator>
+         </menu>
+         <action
+               class="org.openntf.swiper.action.LaunchODPFolderAction"
+               enablesFor="1"
+               icon="icons/folder_go.png"
+               id="org.openntf.swiper.launchodpfolderaction"
+               label="Open ODP Folder in System Explorer"
+               menubarPath="org.openntf.swiper.menu/org.openntf.swiper.separator"
+               style="push"
+               toolbarPath="swiper"
+               tooltip="Open ODP Folder in System Explorer">
+         </action>
+
+         <action
+               class="org.openntf.swiper.action.RefreshODPThenSyncAction"
+               enablesFor="1"
+               icon="icons/sport_8ball.png"
+               id="org.openntf.swiper.refreshodpthensyncaction"
+               label="Refresh On-Disk Project and then Sync"
+               menubarPath="org.openntf.swiper.menu/org.openntf.swiper.separator"
+               style="push"
+               toolbarPath="swiper"
+               tooltip="Refresh On-Disk Project and then Sync">
+         </action>
+
+         <action
+               class="org.openntf.swiper.action.RefreshODPAction"
+               enablesFor="1"
+               icon="icons/arrow_refresh_small.png"
+               id="org.openntf.swiper.refreshodpaction"
+               label="Refresh On-Disk Project"
+               menubarPath="org.openntf.swiper.menu/org.openntf.swiper.separator"
+               style="push"
+               toolbarPath="swiper"
+               tooltip="Refresh On-Disk Project">
+         </action>
+         <action
+               class="org.openntf.swiper.action.SyncAction"
+               enablesFor="1"
+               icon="icons/arrow_switch.png"
+               id="org.openntf.swiper.action1"
+               label="Sync with On Disk Project"
+               menubarPath="org.openntf.swiper.menu/org.openntf.swiper.separator"
+               style="push"
+               toolbarPath="swiper"
+               tooltip="Sync with On Disk Project">
+         </action>
+
+      </actionSet>
+   </extension>
+
+
+</plugin>
