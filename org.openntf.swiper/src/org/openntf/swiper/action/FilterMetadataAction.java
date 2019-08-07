@@ -136,10 +136,14 @@ public class FilterMetadataAction extends AbstractTeamHandler {
 		InputStream is = diskFile.getContents(true);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Source source = new StreamSource(is);
-
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
+		
+		transformer.clearParameters();
+		
+		if (diskFile.getFullPath().getFileExtension().contains("navigator")) {
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");	
+		}
+		
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
 
 		/*
