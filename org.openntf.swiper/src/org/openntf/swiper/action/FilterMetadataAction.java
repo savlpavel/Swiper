@@ -139,7 +139,8 @@ public class FilterMetadataAction extends AbstractTeamHandler {
 		
 		transformer.clearParameters();
 		
-		if (diskFile.getFullPath().getFileExtension().contains("navigator")) {
+		if (!(diskFile.getFullPath().getFileExtension().equals("form") 
+				|| diskFile.getFullPath().getFileExtension().equals("subform"))) {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");	
 		}

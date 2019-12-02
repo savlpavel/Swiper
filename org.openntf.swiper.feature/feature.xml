@@ -10,8 +10,9 @@
 <feature
       id="org.openntf.swiper.feature"
       label="OpenNTF Swiper Feature"
-      version="2.0.3.qualifier"
-      provider-name="OpenNTF">
+      version="2.0.4.qualifier"
+      provider-name="OpenNTF"
+      plugin="org.openntf.swiper">
 
    <description url="http://www.openntf.org/main.nsf/project.xsp?r=project/Swiper">
       Swiper is a Feature for Domino Designer which is used in tandem with the Source Control Enablement. 
@@ -232,6 +233,24 @@ Licensed under Apache
    See the License for the specific language governing permissions and
    limitations under the License.
    </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="com.ibm.designer.domino.team"/>
+      <import plugin="com.ibm.designer.domino.ide.resources"/>
+      <import plugin="com.ibm.designer.prj.resources"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="com.ibm.designer.domino.preferences"/>
+      <import plugin="com.ibm.commons.swt"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="com.ibm.commons.iloader"/>
+      <import plugin="com.ibm.commons.swt.data"/>
+      <import plugin="com.ibm.commons"/>
+      <import plugin="org.eclipse.core.expressions"/>
+   </requires>
 
    <plugin
          id="org.openntf.swiper"
